@@ -229,6 +229,11 @@ int main(int argc, char **argv)
     p.tpr0   = r->tpr0;
     p.tpr1   = r->tpr1;
     p.tpr2   = r->tpr2;
+    p.tpr3   = ((((r->dllcr[0]) >> 6) & 0x3f) << 16) |
+               ((((r->dllcr[1]) >> 14) & 0xf) << 0) |
+               ((((r->dllcr[2]) >> 14) & 0xf) << 4) |
+               ((((r->dllcr[3]) >> 14) & 0xf) << 8) |
+               ((((r->dllcr[4]) >> 14) & 0xf) << 12);
     p.emr1   = r->emr;
     p.emr2   = r->emr2;
     p.emr3   = r->emr3;
@@ -251,8 +256,8 @@ int main(int argc, char **argv)
      */
      p.clock = (24 *
          ((ccm->pll5_cfg >> CCM_PLL5_FACTOR_N) & CCM_PLL5_FACTOR_N_SIZE) *
-         ((ccm->pll5_cfg >> CCM_PLL5_FACTOR_K) & CCM_PLL5_FACTOR_K_SIZE) /
-         ((ccm->pll5_cfg >> CCM_PLL5_FACTOR_M) & CCM_PLL5_FACTOR_M_SIZE)
+         (((ccm->pll5_cfg >> CCM_PLL5_FACTOR_K) & CCM_PLL5_FACTOR_K_SIZE) + 1) /
+         (((ccm->pll5_cfg >> CCM_PLL5_FACTOR_M) & CCM_PLL5_FACTOR_M_SIZE) + 1)
     );
 
     /* Print dram_para struct */
